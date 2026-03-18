@@ -1,4 +1,4 @@
-FROM rocm/dev-ubuntu-22.04:6.2.4
+FROM rocm/dev-ubuntu-22.04:6.2.4@sha256:030304ab0a88778b627b2eb2354c419146e105f5ac39ffd9c2438c82ef54b584
 LABEL maintainer="Hugging Face"
 
 ARG DEBIAN_FRONTEND=noninteractive

@@ -35,12 +35,20 @@ on:
 env:
   TRANSFORMERS_CI_RESULTS_UPLOAD_TOKEN: ${{ secrets.TRANSFORMERS_CI_RESULTS_UPLOAD_TOKEN }}
 
+permissions:
+  contents: read
+
 jobs:
   send_results:
     name: Send results to webhook
     runs-on: ubuntu-22.04
     if: always() && !cancelled()
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
       - name: Preliminary job status
         shell: bash
         # For the meaning of these environment variables, see the job `Setup`
@@ -49,13 +57,13 @@ jobs:
         run: |
           echo "Setup status: $setup_status"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 2
           # Security: checkout to the `main` branch for untrusted triggers (issue_comment, pull_request_target), otherwise use the specified ref
           ref: ${{ (github.event_name == 'issue_comment' || github.event_name == 'pull_request_target') && 'main' || (inputs.commit_sha || github.sha) }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
 
       - name: Prepare some setup values
         run: |
@@ -106,7 +114,7 @@ jobs:
 
       # Upload the directory containing CI reports prepared in `notification_service.py`
       - name: Failure table artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ci_results_${{ inputs.job }}
           path: ci_results_${{ inputs.job }}

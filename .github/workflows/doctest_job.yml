@@ -18,6 +18,9 @@ env:
   MKL_NUM_THREADS: 16
   TF_FORCE_GPU_ALLOW_GROWTH: true
 
+permissions:
+  contents: read
+
 jobs:
   run_doctests:
     name: " "
@@ -32,6 +35,11 @@ jobs:
       image: huggingface/transformers-all-latest-gpu
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
       - name: Update clone
         working-directory: /transformers
         run: git fetch && git checkout ${{ github.sha }}
@@ -76,7 +84,7 @@ jobs:
 
       - name: "Test suite reports artifacts: doc_tests_gpu_test_reports_${{ env.split_keys }}"
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: doc_tests_gpu_test_reports_${{ env.split_keys }}
           path: /transformers/reports/doc_tests_gpu_${{ env.split_keys }}

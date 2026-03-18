@@ -1,5 +1,5 @@
 # https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/rel-24-08.html
-FROM nvcr.io/nvidia/pytorch:24.08-py3
+FROM nvcr.io/nvidia/pytorch:24.08-py3@sha256:3afe094482e641337edfab878c87ca9c14ab3572b2ad048ac2554dd56d7cc024
 LABEL maintainer="Hugging Face"
 
 ARG DEBIAN_FRONTEND=noninteractive
