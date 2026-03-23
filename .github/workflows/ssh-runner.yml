@@ -30,6 +30,11 @@ jobs:
     outputs:
       RUNNER: ${{ steps.set_runner.outputs.RUNNER }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
       - name: Get runner to use
         shell: bash
         env:
@@ -58,6 +63,11 @@ jobs:
     container:
       image: ${{ github.event.inputs.docker_image }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
       - name: Update clone
         working-directory: /transformers
         env:
@@ -169,7 +179,7 @@ jobs:
           fi
         
       - name: Tailscale # In order to be able to SSH when a test fails
-        uses: huggingface/tailscale-action@main
+        uses: huggingface/tailscale-action@7d53c9737e53934c30290b5524d1c9b4a7c98c8a # main
         with:
           authkey: ${{ secrets.TAILSCALE_SSH_AUTHKEY }}
           slackChannel: ${{ env.SLACKCHANNEL }}

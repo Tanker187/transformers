@@ -1,4 +1,4 @@
-FROM intel/deep-learning-essentials:2025.1.3-0-devel-ubuntu22.04 AS base
+FROM intel/deep-learning-essentials:2025.1.3-0-devel-ubuntu22.04@sha256:ce6740b7cc6452706719fe0060ce4e427446c2890301b8e3bcf17df7eea1d1fe AS base
 LABEL maintainer="Hugging Face"
 
 SHELL ["/bin/bash", "-c"]

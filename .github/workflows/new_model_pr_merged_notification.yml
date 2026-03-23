@@ -8,12 +8,20 @@ on:
     paths:
       - 'src/transformers/models/*/modeling_*'
 
+permissions:
+  contents: read
+
 jobs:
   notify_new_model:
     name: Notify new model
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
       - name: Check new model
@@ -38,7 +46,7 @@ jobs:
 
       - name: Notify
         if: ${{ env.NEW_MODEL != ''}}
-        uses: slackapi/slack-github-action@6c661ce58804a1a20f6dc5fbee7f0381b469e001
+        uses: step-security/slack-github-action@77483a1a06c0ce2933c1f2f144fb5a85db7f3e80 # v2.1.1
         with:
           # Slack channel id, channel name, or user id to post message.
           # See also: https://api.slack.com/methods/chat.postMessage#channels
